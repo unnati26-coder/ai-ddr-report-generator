@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.env
+temp/
+extracted_images/
+.streamlit/
+.DS_Store
