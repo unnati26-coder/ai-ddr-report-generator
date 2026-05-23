@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DDR AI System — Architecture</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 20px; }
+  h1 { color: #1F4E79; text-align: center; font-size: 24px; margin-bottom: 4px; }
+  .subtitle { text-align: center; color: #C55A11; font-style: italic; margin-bottom: 30px; }
+  .flow { display: flex; align-items: flex-start; justify-content: center; gap: 10px; flex-wrap: wrap; }
+  .box { background: white; border-radius: 10px; padding: 16px; min-width: 160px; max-width: 200px;
+         box-shadow: 0 2px 8px rgba(0,0,0,0.12); text-align: center; }
+  .box.input  { border-top: 4px solid #1F4E79; }
+  .box.step   { border-top: 4px solid #C55A11; }
+  .box.ai     { border-top: 4px solid #7030A0; background: #F8F0FF; }
+  .box.output { border-top: 4px solid #00B050; }
+  .box h3 { margin: 0 0 6px 0; font-size: 13px; color: #1F4E79; }
+  .box.ai h3 { color: #7030A0; }
+  .box.output h3 { color: #00B050; }
+  .box p  { margin: 0; font-size: 11px; color: #555; line-height: 1.5; }
+  .arrow { font-size: 28px; color: #C55A11; align-self: center; padding-top: 10px; }
+  .section-label { text-align: center; font-size: 12px; color: #888; margin-top: 4px; font-style: italic; }
+  .steps-row { display: flex; gap: 8px; justify-content: center; margin: 20px 0; flex-wrap: wrap; }
+  .step-num { background: #C55A11; color: white; border-radius: 50%; width: 24px; height: 24px;
+              display: inline-flex; align-items: center; justify-content: center; font-size: 12px;
+              font-weight: bold; margin-bottom: 6px; }
+  .tag { display: inline-block; background: #E8F4FF; color: #1F4E79; border-radius: 4px;
+         padding: 2px 7px; font-size: 10px; margin: 2px; border: 1px solid #BDD7EE; }
+  .tag.ai { background: #F3E8FF; color: #7030A0; border-color: #D4B4F0; }
+  .tag.out { background: #E8FFE8; color: #00B050; border-color: #B4E8B4; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  .outputs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                  gap: 12px; max-width: 900px; margin: 0 auto; }
+  .output-card { background: white; border-left: 4px solid #00B050; border-radius: 6px;
+                 padding: 10px 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+  .output-card h4 { margin: 0 0 4px; font-size: 12px; color: #1F4E79; }
+  .output-card p  { margin: 0; font-size: 11px; color: #555; }
+</style>
+</head>
+<body>
+
+<h1>🏗️ DDR Report Generator — AI System Architecture</h1>
+<p class="subtitle">Converts Inspection PDFs → Professional Diagnostic Report using Claude AI</p>
+
+<!-- Pipeline flow -->
+<div class="flow">
+
+  <div>
+    <div class="box input">
+      <div class="step-num">📄</div>
+      <h3>Inspection PDF</h3>
+      <p>UrbanRoof site inspection report with photos & checklist findings</p>
+    </div>
+    <div class="section-label">INPUT 1</div>
+  </div>
+
+  <div class="arrow">+</div>
+
+  <div>
+    <div class="box input">
+      <div class="step-num">🌡️</div>
+      <h3>Thermal PDF</h3>
+      <p>Bosch GTC 400 C thermal images with temperature readings</p>
+    </div>
+    <div class="section-label">INPUT 2</div>
+  </div>
+
+  <div class="arrow">→</div>
+
+  <div>
+    <div class="box step">
+      <div class="step-num">1</div>
+      <h3>PDFExtractor</h3>
+      <p>Converts every PDF page to JPEG image using pdftoppm</p>
+      <br>
+      <span class="tag">pdftoppm</span>
+      <span class="tag">Pillow</span>
+      <span class="tag">base64</span>
+    </div>
+    <div class="section-label">STEP 1</div>
+  </div>
+
+  <div class="arrow">→</div>
+
+  <div>
+    <div class="box ai">
+      <div class="step-num" style="background:#7030A0">🤖</div>
+      <h3>AIAnalyzer</h3>
+      <p>Sends page images to Claude Vision API in 3 calls:</p>
+      <br>
+      <span class="tag ai">Inspection Analysis</span><br>
+      <span class="tag ai">Thermal Analysis</span><br>
+      <span class="tag ai">DDR Generation</span>
+    </div>
+    <div class="section-label">STEP 2 — Claude AI</div>
+  </div>
+
+  <div class="arrow">→</div>
+
+  <div>
+    <div class="box step">
+      <div class="step-num">3</div>
+      <h3>DDRDocumentBuilder</h3>
+      <p>Builds formatted Word document with embedded images & tables</p>
+      <br>
+      <span class="tag">python-docx</span>
+      <span class="tag">Images</span>
+    </div>
+    <div class="section-label">STEP 3</div>
+  </div>
+
+  <div class="arrow">→</div>
+
+  <div>
+    <div class="box output">
+      <div class="step-num" style="background:#00B050">✅</div>
+      <h3>DDR_Report.docx</h3>
+      <p>Professional Word report with all 7 sections + embedded images</p>
+    </div>
+    <div class="section-label">OUTPUT</div>
+  </div>
+
+</div>
+
+<hr>
+
+<!-- DDR Sections output -->
+<h2 style="text-align:center; color:#1F4E79; font-size:16px;">📋 Generated Report Sections</h2>
+<div class="outputs-grid">
+  <div class="output-card">
+    <h4>1. Property Issue Summary</h4>
+    <p>Overview + color-coded issue table with severity</p>
+  </div>
+  <div class="output-card">
+    <h4>2. Area-Wise Observations</h4>
+    <p>Per-area details with site photos + thermal images embedded</p>
+  </div>
+  <div class="output-card">
+    <h4>3. Probable Root Cause</h4>
+    <p>AI-reasoned root cause analysis per issue type</p>
+  </div>
+  <div class="output-card">
+    <h4>4. Severity Assessment</h4>
+    <p>HIGH / MEDIUM / LOW ratings with full reasoning</p>
+  </div>
+  <div class="output-card">
+    <h4>5. Recommended Actions</h4>
+    <p>Immediate, Short-term & Long-term action plan</p>
+  </div>
+  <div class="output-card">
+    <h4>6. Additional Notes</h4>
+    <p>Key contextual observations from inspection data</p>
+  </div>
+  <div class="output-card">
+    <h4>7. Missing Information</h4>
+    <p>All gaps explicitly flagged as "Not Available"</p>
+  </div>
+</div>
+
+<hr>
+<p style="text-align:center; font-size:11px; color:#888;">
+  Tech Stack: Python 3.10+ · Claude claude-opus-4-5 (Anthropic) · python-docx · Pillow · pdftoppm (Poppler)
+</p>
+
+</body>
+</html>
